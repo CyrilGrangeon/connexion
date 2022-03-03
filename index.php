@@ -2,29 +2,33 @@
 
 include_once 'connexionBdd.php';
 
-  //--------C du CRUD------------------------------------
-  if(isset($_POST['inscription'])) {
-    $username = $_POST['username'];
-    $password = password_hash( $_POST['password'], PASSWORD_DEFAULT);
-    $email = $_POST['email'];
-    
+  //----------------C du CRUD--------------
+if(isset($_POST['inscription'])){
 
-    $sqlC = "INSERT INTO `inscription`(`username`, `email`, `password`) VALUES (:username, :email, :password)"; //Requete en sql
-    $request = $db->prepare($sqlC); // On prépare la requete
-    $request->bindValue(":username", $username, PDO::PARAM_STR); 
-    $request->bindValue(":email", $email, PDO::PARAM_STR); // On associé la valeur au paramétre nommé
-    $request->bindValue(":password", $password, PDO::PARAM_STR);
-    $request->execute(); // On execute la requête
+    $user = htmlspecialchars($_POST['username']);
+    $email = htmlspecialchars($_POST['email']);
+    $pwd = password_hash($_POST['password'], PASSWORD_DEFAULT);
+
+    //prepare request
+    $request = $db->prepare("SELECT * FROM inscription WHERE username=:user");
+    $request ->bindValue(":user", $user, PDO::PARAM_STR);
+    //execute request
+    $request->execute(); 
+    //fetch result
+    $users = $request->fetch();
+    
+    if ($users!=false) {
+        echo "Ce pseudo est déjà pris !";
+    } else {
+        $sqlC = "INSERT INTO inscription( username, email, password) VALUES (:username, :email, :password)";
+        $request = $db->prepare($sqlC); //On prépare la requête
+        $request->bindValue(":username", $user, PDO::PARAM_STR); //Il faut binder toutes les valeurs entrées par l'utilisateur
+        $request->bindValue(":email", $email, PDO::PARAM_STR); //Il faut binder toutes les valeurs entrées par l'utilisateur
+        $request->bindValue(":password", $pwd, PDO::PARAM_STR); //Il faut binder toutes les valeurs entrées par l'utilisateur
+        $request->execute(); //On exécute la requête
+    } 
 
 }
-
-    // ----------------R du CRUD----------------------
-    $sqlR = "SELECT * FROM inscription"; // Requete en sql
-    $request = $db->prepare($sqlR); // On prépare la requete
-    $request->execute(); // On execute la requête
-    $users = $request->fetchAll();
-    
-    
 
 ?>
 
