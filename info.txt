@@ -1,1 +1,38 @@
 créer un systeme de connexion et inscription en php.
+
+1 Configuration de la base de données (BDD)
+-Un champ id(int11) qui sera une clef primaire;
+-un champ username(varchar42)
+-un champ email(varchar180)
+-un champ password (varchar255)
+
+2 Créer un fichier contenant le système de connection à la BDD (PDO)
+
+3 Créer l'index.html 
+
+4 Créer le système d'inscription 
+Créer le formulaire en HTML (vous récupérez un email donc les RGPD doivent être acceptées avant soumission du formulaire)
+Faire en sorte qu'une fois le formulaire soumis un utilisateur soit enregistrer en BDD (attention, le mdp ne doit pas être enregistré en clair : HASH)
+
+Mettre en forme le formulaire avec du css (pas de framework)
+Ajouter les validations en JS Vanilla (ajout d'un champ de confirmation de mdp)
+
+5 Créer le système de connection (Branche connexion)
+Créer le formulaire en HTML où l'on peut se connecter avec le username et le mdp 
+Faire en sorte qu'une fois le formulaire soumis le programme recherche l'existence en BDD de l'enregistrement avec ce username
+En cas d'échec, afficher un message d'erreur
+En cas d'authentification réussie, changer l'état de la barre de navigation
+
+Ajout du css
+Ajout du JS
+
+6 Mettre en place la barre de navigation
+
+7 Créer le système de déconnection (branch deconnexion)
+Faire pointer le lien 'Se déconnecter' de la barre de navigation vers une page PHP qui supprime la session en cours et renvoie vers l'index.php 
+
+Sécurisation des formulaires (Branche security)
+Voir la technique du pot de miel (honeyPot) pour se protéger des SPAMs.
+Se protéger des failles XSS.
+Empêcher les attaques CSRF.
+Empêcher les attaques de type brute force.

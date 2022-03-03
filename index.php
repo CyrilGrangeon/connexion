@@ -2,7 +2,33 @@
 
 include_once 'connexionBdd.php';
 
+  //--------C du CRUD------------------------------------
+  if(isset($_POST['inscription'])) {
+    $username = $_POST['username'];
+    $password = password_hash( $_POST['password'], PASSWORD_DEFAULT);
+    $email = $_POST['email'];
+    
+
+    $sqlC = "INSERT INTO `inscription`(`username`, `email`, `password`) VALUES (:username, :email, :password)"; //Requete en sql
+    $request = $db->prepare($sqlC); // On prépare la requete
+    $request->bindValue(":username", $username, PDO::PARAM_STR); 
+    $request->bindValue(":email", $email, PDO::PARAM_STR); // On associé la valeur au paramétre nommé
+    $request->bindValue(":password", $password, PDO::PARAM_STR);
+    $request->execute(); // On execute la requête
+
+}
+
+    // ----------------R du CRUD----------------------
+    $sqlR = "SELECT * FROM inscription"; // Requete en sql
+    $request = $db->prepare($sqlR); // On prépare la requete
+    $request->execute(); // On execute la requête
+    $users = $request->fetchAll();
+    
+    
+
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -11,11 +37,46 @@ include_once 'connexionBdd.php';
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inscription</title>
+    <script defer src="app.js"></script>
 </head>
 
 <body>
-    
+    <section>
+        <h1>Inscription</h1>
+        <p id="error"></p>
+            
+        <form id="form" method="post">
+                    
+            <input id= "username"type="text" placeholder="username" name="username" value="<?php if(isset($username)){ echo $username; }?>" required>   
+                    
+                    
+            <input id="email" type="email" placeholder="Adresse mail" name="email" value="<?php if(isset($email)){ echo $email; }?>" required>
+                    
+            <input id="password" type="password" placeholder="Mot de passe" name="password"  required>
+            <input type="password" placeholder="Confirmer le mot de passe" name="confmdp" required>
+            <button type="submit" name="inscription">Envoyer</button>
+        </form>
 
+        <input type="checkbox" id="rgpd" name="rgpd" required>
+        <label for="checkbox"> Cocher la case pour accepter les RGPD</label>
+
+    </section>
+
+    <h2>Connexion</h2>
+
+    <form method="post">
+                    
+        <input type="text" placeholder="username" name="username" value="<?php if(isset($username)){ echo $username; }?>" required>               
+        <input type="email" placeholder="Adresse mail" name="email" value="<?php if(isset($email)){ echo $email; }?>" required>
+        <button type="submit" name="connexion">Envoyer</button>
+    </form>
+
+
+</body>
+
+
+
+</html>
 
 
 </body>
