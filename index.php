@@ -28,11 +28,50 @@ if(isset($_POST['inscription'])){
         $request->execute(); //On exécute la requête
     } 
 
+    
 }
+
+if(isset($_POST['connexion'])){
+
+    $user = htmlspecialchars($_POST['userco']);
+    $passwords = $_POST['passco'];
+
+    //prepare request
+    $request = $db->prepare("SELECT * FROM inscription WHERE username=:user");
+    $request ->bindValue(":user", $user, PDO::PARAM_STR ) ;
+    //execute request
+    $request->execute(); 
+    //fetch result
+    $users = $request->fetch();
+    //var_dump($users);
+
+    if ($users!=false) {
+        password_verify($passwords, $users['password'] );
+        //var_dump($passwords);
+        var_dump(password_verify($passwords, $users['password'] ));
+        if(password_verify($passwords, $users['password'])===true){
+            session_start();
+            echo" Vous êtes connecté";
+            $_SESSION['connexion'] = 'connexion';
+            $_SESSION['connexion']++;
+            
+        }else{
+            echo "Mauvais utilisateur ou mot de passe !"; // mauvais mdp  
+        }
+    } else{
+        echo "Mauvais utilisateur ou mot de passe !"; // mauvais utilisateur
+    }
+    
+    
+}
+
+
+
+
 
 ?>
 
-
+<?php  if(!isset($_SESSION ['connexion'])){ ?>
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -63,17 +102,27 @@ if(isset($_POST['inscription'])){
 
         <input type="checkbox" id="rgpd" name="rgpd" required>
         <label for="checkbox"> Cocher la case pour accepter les RGPD</label>
-
     </section>
+
+    
+    
 
     <h2>Connexion</h2>
 
     <form method="post">
                     
-        <input type="text" placeholder="username" name="username" value="<?php if(isset($username)){ echo $username; }?>" required>               
-        <input type="email" placeholder="Adresse mail" name="email" value="<?php if(isset($email)){ echo $email; }?>" required>
+        <input id="userco" type="text" placeholder="user" name="userco" value="<?php if(isset($username)){ echo $username; }?>" required>               
+        <input id="passco" type="password" placeholder="Mot de passe" name="passco"  required>
         <button type="submit" name="connexion">Envoyer</button>
+       
     </form>
+<?php } else { ?>
+    <a  href="logout.php">Se déconnecter</a>
+
+<?php } ?>
+
+
+
 
 
 </body>
@@ -84,4 +133,5 @@ if(isset($_POST['inscription'])){
 
 
 </body>
+
 </html>
